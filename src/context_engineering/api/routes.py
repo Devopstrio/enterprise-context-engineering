@@ -1,0 +1,88 @@
+from fastapi import APIRouter, Request, HTTPException
+from pydantic import BaseModel
+from typing import Dict, Any, List
+import time
+from context_engineering.assembler.context_assembler import ContextAssemblyRequest, AssembledContext
+from context_engineering.budget.token_budget_optimizer import TokenBudgetAllocation
+from context_engineering.compressor.context_compressor import CompressionResult
+from context_engineering.templates.prompt_template_engine import RenderedTemplate
+
+router = APIRouter()
+
+class MemoryTurnRequest(BaseModel):
+    role: str
+    content: str
+
+class CompressRequest(BaseModel):
+    text: str
+    target_tokens: int
+
+class TemplateRenderRequest(BaseModel):
+    template_id: str
+    variables: Dict[str, str]
+
+class BudgetEstimateRequest(BaseModel):
+    max_tokens: int
+    system_prompt: str
+    user_input: str
+
+@router.get("/health")
+def health_check():
+    return {
+        "service": "enterprise-context-engineering",
+        "version": "1.0.0",
+        "status": "ok",
+        "uptime": time.time()
+    }
+
+@router.post("/api/v1/context/assemble", response_model=AssembledContext)
+def assemble_context(request: ContextAssemblyRequest, req: Request):
+    assembler = req.app.state.context_assembler
+    return assembler.assemble(request)
+
+@router.post("/api/v1/context/compress", response_model=CompressionResult)
+def compress_context(request: CompressRequest, req: Request):
+    compressor = req.app.state.compressor
+    return compressor.compress(request.text, request.target_tokens)
+
+@router.get("/api/v1/memory/{session_id}")
+def get_memory(session_id: str, max_tokens: int = 1000, req: Request = None):
+    memory = req.app.state.memory_manager
+    return memory.retrieve_memory(session_id, max_tokens)
+
+@router.post("/api/v1/memory/{session_id}")
+def store_memory(session_id: str, request: MemoryTurnRequest, req: Request):
+    memory = req.app.state.memory_manager
+    memory.store_turn(session_id, request.role, request.content)
+    return {"status": "success"}
+
+@router.delete("/api/v1/memory/{session_id}")
+def clear_memory(session_id: str, req: Request):
+    memory = req.app.state.memory_manager
+    memory.clear_session(session_id)
+    return {"status": "success"}
+
+@router.post("/api/v1/templates/render", response_model=RenderedTemplate)
+def render_template(request: TemplateRenderRequest, req: Request):
+    engine = req.app.state.template_engine
+    try:
+        return engine.render_template(request.template_id, request.variables)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.get("/api/v1/templates")
+def list_templates(req: Request):
+    engine = req.app.state.template_engine
+    return engine.list_templates()
+
+@router.post("/api/v1/budget/estimate", response_model=TokenBudgetAllocation)
+def estimate_budget(request: BudgetEstimateRequest, req: Request):
+    opt = req.app.state.budget_optimizer
+    sys_tokens = opt.estimate_tokens(request.system_prompt)
+    user_tokens = opt.estimate_tokens(request.user_input)
+    return opt.allocate_budget(request.max_tokens, sys_tokens, user_tokens)
+
+@router.get("/api/v1/audit/events")
+def get_audit_events(limit: int = 100, req: Request = None):
+    logger = req.app.state.audit_logger
+    return logger.get_recent_events(limit)

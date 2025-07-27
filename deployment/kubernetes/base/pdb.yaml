@@ -1,0 +1,9 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: enterprise-context-engineering-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: context-engineering

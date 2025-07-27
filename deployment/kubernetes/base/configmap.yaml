@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: context-engineering-config
+data:
+  ENVIRONMENT: "production"
+  LOG_LEVEL: "INFO"
+  PORT: "8080"
+  MAX_CONTEXT_TOKENS: "8192"
+  MEMORY_MAX_TURNS: "50"
+  COMPRESSION_TARGET_RATIO: "0.5"
+  CACHE_TTL_SECONDS: "3600"

@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build Docker image
+        run: docker build -t enterprise-context-engineering:${{ github.ref_name }} .
+      - name: Push Docker image
+        run: |
+          # docker push enterprise-context-engineering:${{ github.ref_name }}
+          echo "Push step placeholder - uncomment when registry configured"
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true

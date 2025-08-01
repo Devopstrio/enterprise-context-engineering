@@ -1,0 +1,5 @@
+{
+  "max_tokens": 128000,
+  "system_prompt": "You are an enterprise compliance advisor.",
+  "user_input": "Summarize the latest SOC 2 audit findings."
+}

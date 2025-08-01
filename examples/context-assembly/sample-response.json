@@ -1,0 +1,37 @@
+{
+  "assembled_context": {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an enterprise financial analyst assistant. Provide accurate, data-driven responses based on the provided context. Always cite source documents."
+      },
+      {
+        "role": "system",
+        "content": "[Retrieved Context]\n\nSource: finance/quarterly-reports/apac-q3-2025.pdf\nAPAC Q3 2025 Revenue Report: Total revenue reached $4.2B, representing a 12.3% YoY increase. Key growth drivers included cloud services (+18.4%) and AI platform licensing (+34.2%). Japan and India led regional performance with $1.1B and $890M respectively.\n\nSource: finance/annual-reports/global-fy2025-summary.pdf\nGlobal Revenue Summary FY2025: Enterprise AI platform adoption accelerated across all regions. APAC showed strongest sequential growth at 4.7% QoQ, driven by new enterprise contracts in financial services and healthcare verticals."
+      },
+      {
+        "role": "user",
+        "content": "What were the Q3 2025 revenue trends for the APAC region?"
+      }
+    ]
+  },
+  "total_tokens": 312,
+  "budget_allocation": {
+    "system_prompt_tokens": 42,
+    "memory_tokens": 0,
+    "retrieval_tokens": 198,
+    "user_input_tokens": 18,
+    "total_allocated": 258,
+    "remaining_tokens": 127742
+  },
+  "assembly_metadata": {
+    "session_id": "sess-acme-finance-2026-001",
+    "model_name": "gpt-4-turbo",
+    "memory_turns_included": 0,
+    "retrieval_documents_selected": 2,
+    "retrieval_documents_dropped": 0,
+    "compression_applied": false,
+    "cache_hit": false,
+    "assembly_duration_ms": 12.4
+  }
+}

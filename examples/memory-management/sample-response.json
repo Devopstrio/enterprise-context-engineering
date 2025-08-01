@@ -1,0 +1,12 @@
+{
+  "session_id": "sess-acme-support-2026-042",
+  "turn_stored": true,
+  "turn_index": 7,
+  "token_count": 38,
+  "session_stats": {
+    "total_turns": 7,
+    "total_tokens": 412,
+    "oldest_turn_timestamp": "2026-08-04T09:12:00Z",
+    "newest_turn_timestamp": "2026-08-04T10:35:00Z"
+  }
+}

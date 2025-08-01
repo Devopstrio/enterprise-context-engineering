@@ -1,0 +1,8 @@
+{
+  "template_id": "rag_augmented",
+  "variables": {
+    "role_description": "enterprise cloud infrastructure advisor",
+    "context_instructions": "Use the retrieved documents to provide specific, actionable recommendations. Cite sources by filename.",
+    "output_format": "structured markdown with headers and bullet points"
+  }
+}

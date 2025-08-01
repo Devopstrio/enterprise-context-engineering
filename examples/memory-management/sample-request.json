@@ -1,0 +1,5 @@
+{
+  "session_id": "sess-acme-support-2026-042",
+  "role": "user",
+  "content": "Our Kubernetes cluster in eu-west-2 is showing high memory pressure on the context-engineering pods. Can you check the HPA scaling thresholds?"
+}

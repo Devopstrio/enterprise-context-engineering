@@ -1,0 +1,50 @@
+```mermaid
+sequenceDiagram
+    autonumber
+    
+    actor Client as Client App
+    participant API as API Gateway
+    participant Cache as Redis Cache
+    participant Assembler as Context Assembler
+    participant DB as DynamoDB (Memory)
+    participant Engine as Template Engine
+    participant Budget as Budget Optimizer
+    participant Compressor as Compressor
+    participant Audit as CloudWatch Logs
+
+    Client->>API: POST /api/v1/context/assemble (request)
+    API->>Assembler: parse_request()
+    
+    Assembler->>Cache: check_cache(request_hash)
+    alt Cache Hit
+        Cache-->>Assembler: return cached_context
+        Assembler-->>Client: 200 OK (cached_context)
+    else Cache Miss
+        Assembler->>DB: fetch_history(session_id)
+        DB-->>Assembler: return List[ConversationTurn]
+        
+        Assembler->>Engine: render(template_id, variables)
+        Engine-->>Assembler: return rendered_system_prompt
+        
+        Assembler->>Budget: allocate_budget(target_model_limit)
+        Budget-->>Assembler: return TokenBudgetAllocation
+        
+        opt RAG exceeds budget
+            Assembler->>Compressor: compress(rag_data, rag_budget)
+            Compressor-->>Assembler: return compressed_rag_data
+        end
+        
+        opt Memory exceeds budget
+            Assembler->>Compressor: compress(memory_history, memory_budget)
+            Compressor-->>Assembler: return compressed_memory
+        end
+        
+        Assembler->>Assembler: merge_components()
+        
+        Assembler->>Audit: log_audit_event(decision_tree, token_usage)
+        
+        Assembler->>Cache: store(request_hash, final_context)
+        
+        Assembler-->>Client: 200 OK (final_context)
+    end
+```

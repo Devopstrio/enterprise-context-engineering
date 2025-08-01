@@ -1,0 +1,12 @@
+{
+  "budget_allocation": {
+    "system_prompt_tokens": 9,
+    "memory_tokens": 49839,
+    "retrieval_tokens": 68143,
+    "user_input_tokens": 11,
+    "total_allocated": 118002,
+    "remaining_tokens": 9998
+  },
+  "model_context_window": 128000,
+  "budget_utilization_pct": 92.19
+}

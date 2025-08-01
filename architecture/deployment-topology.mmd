@@ -1,0 +1,38 @@
+```mermaid
+graph TD
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white;
+    classDef k8s fill:#326CE5,stroke:#fff,stroke-width:2px,color:white;
+    classDef client fill:#f8f9fa,stroke:#6c757d,stroke-width:2px;
+
+    User["Client Applications"]:::client
+
+    subgraph "AWS Cloud"
+        ALB["Application Load Balancer"]:::aws
+        
+        subgraph "Amazon EKS (Kubernetes)"
+            Ingress["Ingress Controller"]:::k8s
+            
+            subgraph "context-platform Namespace"
+                Pod1["API Pod (Replica 1)"]:::k8s
+                Pod2["API Pod (Replica 2)"]:::k8s
+                Pod3["API Pod (Replica 3)"]:::k8s
+            end
+            
+            HPA["Horizontal Pod Autoscaler"]:::k8s
+        end
+        
+        Redis[("ElastiCache Redis<br/>(Multi-AZ)")]:::aws
+        Dynamo[("DynamoDB<br/>(On-Demand)")]:::aws
+        CloudWatch["CloudWatch Logs"]:::aws
+    end
+
+    User -->|HTTPS| ALB
+    ALB --> Ingress
+    Ingress --> Pod1 & Pod2 & Pod3
+    
+    Pod1 & Pod2 & Pod3 -->|Read/Write Context| Redis
+    Pod1 & Pod2 & Pod3 -->|Read/Write History| Dynamo
+    Pod1 & Pod2 & Pod3 -->|Export Audit Events| CloudWatch
+    
+    HPA -.->|Scale Up/Down| Pod1
+```

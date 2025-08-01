@@ -1,0 +1,50 @@
+```mermaid
+graph TD
+    %% Define styles
+    classDef client fill:#d4edda,stroke:#28a745,stroke-width:2px;
+    classDef platform fill:#cce5ff,stroke:#007bff,stroke-width:2px;
+    classDef datastore fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
+    classDef external fill:#f8d7da,stroke:#dc3545,stroke-width:2px;
+
+    %% Client Layer
+    Clients["Enterprise Client Apps<br/>(Chatbots, Agents, Copilots)"]:::client
+
+    %% Gateway
+    API["API Gateway<br/>(REST Interface)"]:::platform
+
+    %% Core Components
+    subgraph Enterprise Context Engineering Platform
+        Assembler["Context Assembler<br/>(Orchestrator)"]:::platform
+        Memory["Memory Manager"]:::platform
+        Budget["Token Budget Optimizer"]:::platform
+        Compressor["Context Compressor"]:::platform
+        Template["Prompt Template Engine"]:::platform
+        Retrieval["Retrieval Integrator"]:::platform
+    end
+
+    %% Data Stores
+    Cache[("ElastiCache Redis<br/>(Context Cache)")]:::datastore
+    DB[("DynamoDB<br/>(Conversation Memory)")]:::datastore
+
+    %% External
+    LLM["LLM Providers<br/>(OpenAI, Anthropic, Gemini)"]:::external
+    RAG["Enterprise RAG Systems<br/>(Vector DBs)"]:::external
+
+    %% Connections
+    Clients -->|POST /assemble| API
+    Clients -->|RAG Documents| RAG
+    
+    API --> Assembler
+    
+    Assembler <-->|Check/Set| Cache
+    Assembler <-->|Fetch/Save History| Memory
+    Assembler <-->|Calculate Limits| Budget
+    Assembler <-->|Extractive Summarization| Compressor
+    Assembler <-->|Inject Variables| Template
+    Assembler <-->|Merge Context| Retrieval
+    
+    Memory <-->|Persist/Retrieve| DB
+    Retrieval <-->|Query Documents| RAG
+    
+    Assembler -->|Optimized Payload| LLM
+```

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  context-engineering:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - CTX_ENG_ENVIRONMENT=development
+      - CTX_ENG_LOG_LEVEL=DEBUG
+      - CTX_ENG_PORT=8080
+      - CTX_ENG_MAX_CONTEXT_TOKENS=128000
+      - CTX_ENG_MEMORY_MAX_TURNS=50
+      - CTX_ENG_MEMORY_SLIDING_WINDOW_SIZE=20
+      - CTX_ENG_COMPRESSION_TARGET_RATIO=0.5
+      - CTX_ENG_CACHE_TTL_SECONDS=300
+      - CTX_ENG_REDIS_URL=redis://redis:6379/0
+      - CTX_ENG_ENABLE_AUDIT_LOGGING=true
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]

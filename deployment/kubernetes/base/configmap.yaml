@@ -5,6 +5,7 @@ metadata:
 data:
   ENVIRONMENT: "production"
   LOG_LEVEL: "INFO"
+  HOST: "0.0.0.0"
   PORT: "8080"
   MAX_CONTEXT_TOKENS: "8192"
   MEMORY_MAX_TURNS: "50"

@@ -10,6 +10,7 @@ services:
     environment:
       - CTX_ENG_ENVIRONMENT=development
       - CTX_ENG_LOG_LEVEL=DEBUG
+      - CTX_ENG_HOST=0.0.0.0
       - CTX_ENG_PORT=8080
       - CTX_ENG_MAX_CONTEXT_TOKENS=128000
       - CTX_ENG_MEMORY_MAX_TURNS=50

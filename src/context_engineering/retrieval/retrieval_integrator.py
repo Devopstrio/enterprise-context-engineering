@@ -28,7 +28,7 @@ class RetrievalIntegrator:
         self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
     def _get_content_hash(self, content: str) -> str:
-        return hashlib.md5(content.encode("utf-8")).hexdigest()  # noqa: S324
+        return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
     def process(self, documents: list[RetrievalDocument], max_tokens: int) -> IntegratedRetrievalResult:
         """Ranks, deduplicates, and selects documents within budget."""

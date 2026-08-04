@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class ContextEngineSettings(BaseSettings):
     environment: str = "development"
     log_level: str = "INFO"
+    host: str = "0.0.0.0"
     port: int = 8080
     max_context_tokens: int = 128000
     default_model_context_window: int = 128000

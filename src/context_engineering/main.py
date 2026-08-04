@@ -82,4 +82,9 @@ async def startup_event() -> None:
 app.include_router(api_router)
 
 if __name__ == "__main__":
-    uvicorn.run("context_engineering.main:app", host="0.0.0.0", port=settings.port, reload=True)
+    uvicorn.run(
+        "context_engineering.main:app",
+        host=settings.host,
+        port=settings.port,
+        reload=True,
+    )  # nosec B104

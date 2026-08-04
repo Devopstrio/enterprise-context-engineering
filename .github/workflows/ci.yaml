@@ -18,12 +18,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install ruff mypy pytest pytest-cov bandit
+          python -m pip install --upgrade pip setuptools wheel
           pip install -e ".[dev]"
+      - name: Verify Python environment
+        run: |
+          python --version
+          pip --version
+          pip list
+          python -c "import fastapi; print(f'FastAPI: {fastapi.__version__}')"
       - name: Lint with ruff
         run: ruff check .
       - name: Type check with mypy

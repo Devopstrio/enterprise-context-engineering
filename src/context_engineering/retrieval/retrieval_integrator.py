@@ -1,44 +1,50 @@
-from typing import List, Dict, Any
-from pydantic import BaseModel
-import tiktoken
+from __future__ import annotations
+
 import hashlib
+from typing import Any
+
+import tiktoken
+from pydantic import BaseModel
+
 
 class RetrievalDocument(BaseModel):
     content: str
     source: str
     relevance_score: float
-    metadata: Dict[str, Any] = {}
+    metadata: dict[str, Any] = {}
+
 
 class IntegratedRetrievalResult(BaseModel):
-    selected_documents: List[RetrievalDocument]
+    selected_documents: list[RetrievalDocument]
     total_tokens_used: int
     documents_selected: int
     documents_dropped: int
 
+
 class RetrievalIntegrator:
     """Integrates and ranks retrieval documents for context."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
     def _get_content_hash(self, content: str) -> str:
-        return hashlib.md5(content.encode("utf-8")).hexdigest()
+        return hashlib.md5(content.encode("utf-8")).hexdigest()  # noqa: S324
 
-    def process(self, documents: List[RetrievalDocument], max_tokens: int) -> IntegratedRetrievalResult:
+    def process(self, documents: list[RetrievalDocument], max_tokens: int) -> IntegratedRetrievalResult:
         """Ranks, deduplicates, and selects documents within budget."""
         if not documents:
             return IntegratedRetrievalResult(
                 selected_documents=[],
                 total_tokens_used=0,
                 documents_selected=0,
-                documents_dropped=0
+                documents_dropped=0,
             )
 
         # Rank by relevance score descending
         sorted_docs = sorted(documents, key=lambda x: x.relevance_score, reverse=True)
 
-        selected = []
-        seen_hashes = set()
+        selected: list[RetrievalDocument] = []
+        seen_hashes: set[str] = set()
         current_tokens = 0
         documents_dropped = 0
 
@@ -60,5 +66,5 @@ class RetrievalIntegrator:
             selected_documents=selected,
             total_tokens_used=current_tokens,
             documents_selected=len(selected),
-            documents_dropped=documents_dropped
+            documents_dropped=documents_dropped,
         )

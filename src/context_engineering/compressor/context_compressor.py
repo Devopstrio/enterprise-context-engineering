@@ -1,6 +1,8 @@
-from pydantic import BaseModel
-import tiktoken
 import re
+
+import tiktoken
+from pydantic import BaseModel
+
 
 class CompressionResult(BaseModel):
     compressed_text: str
@@ -10,10 +12,11 @@ class CompressionResult(BaseModel):
     sentences_kept: int
     sentences_dropped: int
 
+
 class ContextCompressor:
     """Compresses context to fit target token count."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
     def compress(self, text: str, target_tokens: int) -> CompressionResult:
@@ -24,7 +27,7 @@ class ContextCompressor:
                 compressed_tokens=0,
                 compression_ratio=0.0,
                 sentences_kept=0,
-                sentences_dropped=0
+                sentences_dropped=0,
             )
 
         original_tokens = len(self.tokenizer.encode(text))
@@ -35,7 +38,7 @@ class ContextCompressor:
                 compressed_tokens=original_tokens,
                 compression_ratio=1.0,
                 sentences_kept=len(self._split_sentences(text)),
-                sentences_dropped=0
+                sentences_dropped=0,
             )
 
         sentences = self._split_sentences(text)
@@ -51,7 +54,7 @@ class ContextCompressor:
         selected_indices = []
         current_tokens = 0
 
-        for score, idx, sentence in scored_sentences:
+        for _score, idx, sentence in scored_sentences:
             sentence_tokens = len(self.tokenizer.encode(sentence + " "))
             if current_tokens + sentence_tokens <= target_tokens:
                 selected_indices.append(idx)
@@ -60,7 +63,7 @@ class ContextCompressor:
         selected_indices.sort()
         compressed_sentences = [sentences[idx] for idx in selected_indices]
         compressed_text = " ".join(compressed_sentences)
-        
+
         compressed_tokens = len(self.tokenizer.encode(compressed_text))
         sentences_kept = len(selected_indices)
         sentences_dropped = len(sentences) - sentences_kept
@@ -71,10 +74,10 @@ class ContextCompressor:
             compressed_tokens=compressed_tokens,
             compression_ratio=compressed_tokens / original_tokens if original_tokens > 0 else 0.0,
             sentences_kept=sentences_kept,
-            sentences_dropped=sentences_dropped
+            sentences_dropped=sentences_dropped,
         )
 
     def _split_sentences(self, text: str) -> list[str]:
         # Simple regex for sentence splitting
-        sentences = re.split(r'(?<=[.!?])\s+', text)
+        sentences = re.split(r"(?<=[.!?])\s+", text)
         return [s.strip() for s in sentences if s.strip()]

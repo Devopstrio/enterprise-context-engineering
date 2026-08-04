@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class ContextEngineSettings(BaseSettings):
     environment: str = "development"
     log_level: str = "INFO"

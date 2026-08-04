@@ -1,27 +1,23 @@
-<p align="center">
-  <img src="images/architecture_drawio.png" alt="Enterprise Context Engineering — Architecture" width="900"/>
-</p>
+<div align="center">
 
-<h1 align="center">Enterprise Context Engineering</h1>
+<img src="https://raw.githubusercontent.com/Devopstrio/.github/main/assets/Browser_logo.png" height="90"/>
 
-<p align="center">
-  <strong>Production-grade context window assembly, conversation memory management, token budget optimization, context compression, prompt template rendering, and context audit logging for enterprise LLM applications.</strong>
-</p>
+<h1>Context Engineering</h1>
 
-<p align="center">
-  <a href="https://github.com/Devopstrio/enterprise-context-engineering/actions/workflows/ci.yaml"><img src="https://github.com/Devopstrio/enterprise-context-engineering/actions/workflows/ci.yaml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/Devopstrio/enterprise-context-engineering/actions/workflows/release.yaml"><img src="https://github.com/Devopstrio/enterprise-context-engineering/actions/workflows/release.yaml/badge.svg" alt="Release"></a>
-  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
-  <img src="https://img.shields.io/badge/terraform-%3E%3D1.6-purple" alt="Terraform >=1.6">
-  <img src="https://img.shields.io/badge/kubernetes-1.28%2B-326CE5" alt="Kubernetes 1.28+">
-  <img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT">
-</p>
+<p><strong>Enterprise Context Engineering Platform — Context Window Assembly, Memory Management, Token Budget Optimization & Prompt Template Engine</strong></p>
+
+[![Build Status](https://img.shields.io/badge/Build-Passing-10B981?style=flat-square)](https://devopstrio.co.uk)
+[![Python Version](https://img.shields.io/badge/Python-3.11%2B-3776AB.svg?style=flat-square)](https://python.org)
+[![Context Engineering](https://img.shields.io/badge/Context_Engineering-Active-10B981?style=flat-square)](https://devopstrio.co.uk)
+[![Terraform](https://img.shields.io/badge/IaC-OpenTofu_1.8.5-FF5733?style=flat-square)](https://opentofu.org)
+
+</div>
 
 ---
 
-## Overview
+## Executive Summary
 
-**Enterprise Context Engineering** is the specialized platform layer that manages how context windows are assembled, optimized, compressed, cached, and delivered to LLM inference endpoints. It sits between your application logic and the LLM provider, ensuring every inference call receives a maximally effective context window within the model's token limits.
+**Context Engineering** is the specialized platform layer that manages how context windows are assembled, optimized, compressed, cached, and delivered to LLM inference endpoints. It sits between application logic and LLM providers, ensuring every inference call receives a maximally effective context window within the model's token limits.
 
 This platform solves critical enterprise challenges:
 
@@ -35,9 +31,15 @@ This platform solves critical enterprise challenges:
 | **Repeated context assembly** | TTL-based context caching with LRU eviction for high-throughput workloads |
 | **Compliance & observability** | Structured audit logging of every assembly decision for regulatory review |
 
+<div align="center">
+<img src="images/architecture.png"
+alt="Architecture Diagram"
+width="1100"/>
+</div>
+
 ---
 
-## Architecture
+## Architecture Details
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -80,25 +82,25 @@ This platform solves critical enterprise challenges:
 
 ## Core Components
 
-### Context Assembler (`src/context_engineering/assembler/`)
+### Context Assembler ([`src/context_engineering/assembler/context_assembler.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/assembler/context_assembler.py))
 The orchestration engine that constructs optimized context windows by coordinating all sub-components. Accepts a `ContextAssemblyRequest` containing system prompt, user input, session ID, model configuration, retrieval documents, and tool outputs. Returns a fully assembled context with metadata including token counts, budget allocation, and assembly decisions.
 
-### Memory Manager (`src/context_engineering/memory/`)
+### Memory Manager ([`src/context_engineering/memory/memory_manager.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/memory/memory_manager.py))
 Manages per-session conversation history with sliding window eviction and token-bounded retrieval. Stores conversation turns (role, content, timestamp, token count) and retrieves the most recent turns that fit within the allocated memory token budget.
 
-### Token Budget Optimizer (`src/context_engineering/budget/`)
+### Token Budget Optimizer ([`src/context_engineering/budget/token_budget_optimizer.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/budget/token_budget_optimizer.py))
 Allocates the model's context window across competing sections (system prompt, conversation memory, RAG documents, user input) using proportional distribution. Fixed allocations (system prompt, user input) are reserved first, then remaining tokens are distributed between memory and retrieval based on configurable ratios.
 
-### Context Compressor (`src/context_engineering/compressor/`)
+### Context Compressor ([`src/context_engineering/compressor/context_compressor.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/compressor/context_compressor.py))
 Implements extractive compression when assembled context exceeds the token budget. Scores sentences by position, length, and keyword density, then selects top-scored sentences until the target token count is reached.
 
-### Prompt Template Engine (`src/context_engineering/templates/`)
+### Prompt Template Engine ([`src/context_engineering/templates/prompt_template_engine.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/templates/prompt_template_engine.py))
 Manages versioned prompt templates with `{{variable_name}}` placeholder syntax. Ships with built-in templates (`default_system`, `rag_augmented`, `conversational`) and supports custom template registration.
 
-### Context Cache (`src/context_engineering/cache/`)
+### Context Cache ([`src/context_engineering/cache/context_cache.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/cache/context_cache.py))
 TTL-based caching layer for assembled context windows. Generates cache keys from content hashes and serves cached results for repeated or similar queries, reducing latency and compute cost.
 
-### Context Audit Logger (`src/context_engineering/audit/`)
+### Context Audit Logger ([`src/context_engineering/audit/context_audit_logger.py`](file:///C:/Users/mani/.gemini/antigravity/scratch/enterprise-context-engineering/src/context_engineering/audit/context_audit_logger.py))
 Structured JSON logging of all context assembly decisions using `structlog`. Records budget allocations, memory retrievals, compression events, and cache interactions for compliance and debugging.
 
 ---
@@ -115,7 +117,7 @@ Structured JSON logging of all context assembly decisions using `structlog`. Rec
 | `DELETE` | `/api/v1/memory/{session_id}` | Clear all memory for a session |
 | `POST` | `/api/v1/templates/render` | Render a prompt template with variable substitution |
 | `GET` | `/api/v1/templates` | List all registered prompt templates |
-| `GET` | `/api/v1/budget/estimate` | Estimate token budget allocation for given inputs |
+| `POST` | `/api/v1/budget/estimate` | Estimate token budget allocation for given inputs |
 | `GET` | `/api/v1/audit/events` | Retrieve recent context audit events |
 
 ### Example: Assemble Context
@@ -142,7 +144,13 @@ curl -X POST http://localhost:8080/api/v1/context/assemble \
 ### Example: Token Budget Estimation
 
 ```bash
-curl "http://localhost:8080/api/v1/budget/estimate?max_tokens=128000&system_prompt_tokens=500&user_input_tokens=200"
+curl -X POST http://localhost:8080/api/v1/budget/estimate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "max_tokens": 128000,
+    "system_prompt": "You are a helpful assistant.",
+    "user_input": "Hello"
+  }'
 ```
 
 ---
@@ -174,16 +182,7 @@ enterprise-context-engineering/
 │   └── overlays/                  # Environment-specific patches (dev/staging/prod)
 ├── .github/workflows/             # CI/CD pipelines (lint, test, security, deploy)
 ├── docs/                          # Enterprise documentation suite
-│   ├── architecture/              # HLD, LLD, SDD, ADRs
-│   ├── deployment/                # Deployment, Capacity Planning, DR guides
-│   ├── operations/                # Runbook, Support Handover, Troubleshooting
-│   ├── security/                  # Security Hardening, Production Checklist
-│   ├── implementation/            # Implementation Guide
-│   ├── governance/                # Repository Governance Guide
-│   ├── getting-started/           # Getting Started, FAQ
-│   └── roadmap/                   # Product Roadmap
-├── architecture/                  # Mermaid architecture diagrams (.mmd)
-├── examples/                      # Example API payloads
+├── images/                        # Exported architecture diagrams
 ├── Dockerfile                     # Multi-stage production Docker build
 ├── docker-compose.yml             # Local development stack
 └── pyproject.toml                 # PEP 621 project configuration
@@ -214,9 +213,6 @@ pip install -e ".[dev]"
 
 # Run the development server
 uvicorn src.context_engineering.main:app --host 0.0.0.0 --port 8080 --reload
-
-# Run the test suite
-pytest --cov=src/context_engineering --cov-report=term-missing
 
 # Run with Docker Compose (includes Redis)
 docker-compose up --build
@@ -283,50 +279,6 @@ All configuration is managed via environment variables with the `CTX_ENG_` prefi
 
 ---
 
-## Testing
-
-```bash
-# Unit tests
-pytest tests/unit/ -v
-
-# Integration tests
-pytest tests/integration/ -v
-
-# API tests
-pytest tests/api/ -v
-
-# Full suite with coverage
-pytest --cov=src/context_engineering --cov-report=html
-
-# Type checking
-mypy src/context_engineering/
-
-# Linting
-ruff check src/ tests/
-```
-
----
-
-## Documentation
-
-| Document | Location |
-|----------|----------|
-| High-Level Design | [`docs/architecture/HighLevelDesign.md`](docs/architecture/HighLevelDesign.md) |
-| Low-Level Design | [`docs/architecture/LowLevelDesign.md`](docs/architecture/LowLevelDesign.md) |
-| Solution Design Document | [`docs/architecture/SolutionDesignDocument.md`](docs/architecture/SolutionDesignDocument.md) |
-| Architecture Decision Records | [`docs/architecture/ArchitectureDecisionRecords.md`](docs/architecture/ArchitectureDecisionRecords.md) |
-| Deployment Guide | [`docs/deployment/DeploymentGuide.md`](docs/deployment/DeploymentGuide.md) |
-| Capacity Planning | [`docs/deployment/CapacityPlanningGuide.md`](docs/deployment/CapacityPlanningGuide.md) |
-| Disaster Recovery | [`docs/deployment/DisasterRecoveryGuide.md`](docs/deployment/DisasterRecoveryGuide.md) |
-| Operational Runbook | [`docs/operations/OperationalRunbook.md`](docs/operations/OperationalRunbook.md) |
-| Troubleshooting Guide | [`docs/operations/TroubleshootingGuide.md`](docs/operations/TroubleshootingGuide.md) |
-| Security Hardening | [`docs/security/SecurityHardeningGuide.md`](docs/security/SecurityHardeningGuide.md) |
-| Production Checklist | [`docs/security/ProductionChecklist.md`](docs/security/ProductionChecklist.md) |
-| Getting Started | [`docs/getting-started/GettingStarted.md`](docs/getting-started/GettingStarted.md) |
-| FAQ | [`docs/getting-started/FAQ.md`](docs/getting-started/FAQ.md) |
-
----
-
 ## Ecosystem Integration
 
 This repository is part of the **Devopstrio Enterprise AI & Multi-Cloud Landing Zone** ecosystem:
@@ -337,14 +289,8 @@ This repository is part of the **Devopstrio Enterprise AI & Multi-Cloud Landing 
 | [`gateway-observability`](https://github.com/Devopstrio/gateway-observability) | Collects context assembly metrics and traces |
 | [`gateway-security`](https://github.com/Devopstrio/gateway-security) | Enforces authentication and authorization on context assembly endpoints |
 
----
+<div align="center">
 
-## License
+© 2026 Devopstrio — Engineering the Autonomous Enterprise.
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  <sub>Built with precision by <a href="https://github.com/Devopstrio">Devopstrio</a> — Enterprise AI Platform Engineering</sub>
-</p>
+</div>

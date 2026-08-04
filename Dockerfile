@@ -8,8 +8,8 @@ WORKDIR /app
 COPY pyproject.toml ./
 COPY src/ src/
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir .
 
 USER appuser
 
@@ -18,4 +18,4 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
 
-CMD ["uvicorn", "src.context_engineering.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "context_engineering.main:app", "--host", "0.0.0.0", "--port", "8080"]

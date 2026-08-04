@@ -49,7 +49,11 @@ class ContextAssembler:
         self.audit_logger = audit_logger
 
     def assemble(self, request: ContextAssemblyRequest) -> AssembledContext:
-        self.audit_logger.log_assembly_event(request.session_id, "ASSEMBLY_STARTED", {"model_name": request.model_name})
+        self.audit_logger.log_assembly_event(
+            request.session_id,
+            "ASSEMBLY_STARTED",
+            {"model_name": request.model_name},
+        )
 
         sys_tokens = self.budget_optimizer.estimate_tokens(request.system_prompt)
         user_tokens = self.budget_optimizer.estimate_tokens(request.user_input)
@@ -59,12 +63,20 @@ class ContextAssembler:
 
         # Retrieve Memory
         memory_turns = self.memory_manager.retrieve_memory(request.session_id, allocation.memory_tokens)
-        self.audit_logger.log_assembly_event(request.session_id, "MEMORY_RETRIEVED", {"turn_count": len(memory_turns)})
+        self.audit_logger.log_assembly_event(
+            request.session_id,
+            "MEMORY_RETRIEVED",
+            {"turn_count": len(memory_turns)},
+        )
 
         # Integrate Retrieval
-        retrieval_result = self.retrieval_integrator.process(request.retrieval_documents, allocation.retrieval_tokens)
+        retrieval_result = self.retrieval_integrator.process(
+            request.retrieval_documents, allocation.retrieval_tokens
+        )
         self.audit_logger.log_assembly_event(
-            request.session_id, "RETRIEVAL_INTEGRATED", {"selected": retrieval_result.documents_selected}
+            request.session_id,
+            "RETRIEVAL_INTEGRATED",
+            {"selected": retrieval_result.documents_selected},
         )
 
         # Compress if needed (applying to retrieval content in this design)
@@ -76,7 +88,6 @@ class ContextAssembler:
             self.audit_logger.log_compression_event(request.session_id, compression_res)
 
         # Rendering final prompt (simplified for standard completion or chat)
-        # Using basic template logic if RAG
         sys_prompt = request.system_prompt
         if compressed_retrieval_text:
             rendered = self.template_engine.render_template(
@@ -109,7 +120,9 @@ class ContextAssembler:
         }
 
         self.audit_logger.log_assembly_event(
-            request.session_id, "ASSEMBLY_COMPLETED", {"total_tokens": total_tokens}
+            request.session_id,
+            "ASSEMBLY_COMPLETED",
+            {"total_tokens": total_tokens},
         )
 
         return AssembledContext(

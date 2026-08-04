@@ -66,9 +66,17 @@ app.state.context_assembler = context_assembler
 async def startup_event() -> None:
     template_engine.register_template("default_system", "1.0", "{{system_prompt}}", ["system_prompt"])
     template_engine.register_template(
-        "rag_augmented", "1.0", "{{system_prompt}}\n\nContext Information:\n{{context}}", ["system_prompt", "context"]
+        "rag_augmented",
+        "1.0",
+        "{{system_prompt}}\n\nContext Information:\n{{context}}",
+        ["system_prompt", "context"],
     )
-    template_engine.register_template("conversational", "1.0", "You are a helpful assistant.\n{{system_prompt}}", ["system_prompt"])
+    template_engine.register_template(
+        "conversational",
+        "1.0",
+        "You are a helpful assistant.\n{{system_prompt}}",
+        ["system_prompt"],
+    )
 
 
 app.include_router(api_router)

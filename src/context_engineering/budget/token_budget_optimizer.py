@@ -25,7 +25,12 @@ class TokenBudgetOptimizer:
             return 0
         return len(self.tokenizer.encode(text))
 
-    def allocate_budget(self, max_tokens: int, system_prompt_tokens: int, user_input_tokens: int) -> TokenBudgetAllocation:
+    def allocate_budget(
+        self,
+        max_tokens: int,
+        system_prompt_tokens: int,
+        user_input_tokens: int,
+    ) -> TokenBudgetAllocation:
         effective_max = min(max_tokens, self.max_context_tokens)
 
         system_budget = system_prompt_tokens

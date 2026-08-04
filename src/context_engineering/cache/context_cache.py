@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import time
-from typing import Any
+from typing import Any, cast
 
 
 class ContextCache:
@@ -29,7 +29,7 @@ class ContextCache:
             entry = self._cache[cache_key]
             if time.time() < entry["expires_at"]:
                 self._stats["hits"] += 1
-                return entry["data"]
+                return cast(dict[str, Any], entry["data"])
             else:
                 self.invalidate(cache_key)
                 self._stats["evictions"] += 1

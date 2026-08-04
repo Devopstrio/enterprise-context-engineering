@@ -21,13 +21,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          pip install -e ".[dev]"
-      - name: Verify Python environment
+          python -m pip install -e ".[dev]"
+          python -m pip install bandit
+      - name: Verify Python environment & tooling
         run: |
-          python --version
-          pip --version
-          pip list
-          python -c "import fastapi; print(f'FastAPI: {fastapi.__version__}')"
+          which python || true
+          which pip || true
+          which bandit || true
+          python -m pip list
+          bandit --version
       - name: Lint with ruff
         run: ruff check .
       - name: Type check with mypy

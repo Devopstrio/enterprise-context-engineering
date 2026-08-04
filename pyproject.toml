@@ -28,6 +28,7 @@ dev = [
     "coverage>=7.4.0",
     "ruff>=0.3.0",
     "mypy>=1.8.0",
+    "bandit>=1.7.0",
 ]
 
 [tool.setuptools.packages.find]

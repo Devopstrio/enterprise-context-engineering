@@ -6,7 +6,11 @@ from typing import Any, cast
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
-from context_engineering.assembler.context_assembler import AssembledContext, ContextAssemblyRequest
+from context_engineering.assembler.context_assembler import (
+    AssembledContext,
+    ContextAssembler,
+    ContextAssemblyRequest,
+)
 from context_engineering.audit.context_audit_logger import ContextAuditLogger
 from context_engineering.budget.token_budget_optimizer import TokenBudgetAllocation, TokenBudgetOptimizer
 from context_engineering.compressor.context_compressor import CompressionResult, ContextCompressor

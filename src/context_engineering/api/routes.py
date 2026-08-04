@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import time
 from typing import Any
 
@@ -56,7 +58,9 @@ def compress_context(request: CompressRequest, req: Request) -> CompressionResul
 
 
 @router.get("/api/v1/memory/{session_id}")
-def get_memory(session_id: str, max_tokens: int = 1000, req: Request = None) -> list[dict[str, Any]]:
+def get_memory(session_id: str, max_tokens: int = 1000, req: Request | None = None) -> list[dict[str, Any]]:
+    if req is None:
+        return []
     memory = req.app.state.memory_manager
     return memory.retrieve_memory(session_id, max_tokens)
 
@@ -99,6 +103,8 @@ def estimate_budget(request: BudgetEstimateRequest, req: Request) -> TokenBudget
 
 
 @router.get("/api/v1/audit/events")
-def get_audit_events(limit: int = 100, req: Request = None) -> list[dict[str, Any]]:
+def get_audit_events(limit: int = 100, req: Request | None = None) -> list[dict[str, Any]]:
+    if req is None:
+        return []
     logger = req.app.state.audit_logger
     return logger.get_recent_events(limit)

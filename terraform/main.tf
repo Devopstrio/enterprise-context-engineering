@@ -8,12 +8,12 @@ module "network" {
 }
 
 module "context_store" {
-  source                   = "./modules/context_store"
-  environment              = var.environment
-  dynamodb_billing_mode    = var.dynamodb_billing_mode
-  dynamodb_read_capacity   = var.dynamodb_read_capacity
-  dynamodb_write_capacity  = var.dynamodb_write_capacity
-  tags                     = var.tags
+  source                  = "./modules/context_store"
+  environment             = var.environment
+  dynamodb_billing_mode   = var.dynamodb_billing_mode
+  dynamodb_read_capacity  = var.dynamodb_read_capacity
+  dynamodb_write_capacity = var.dynamodb_write_capacity
+  tags                    = var.tags
 }
 
 module "vector_cache" {

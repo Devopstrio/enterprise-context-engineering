@@ -15,7 +15,7 @@ resource "aws_security_group" "this" {
     protocol    = "tcp"
     cidr_blocks = [var.vpc_cidr]
   }
-  
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -39,6 +39,6 @@ resource "aws_elasticache_replication_group" "this" {
   automatic_failover_enabled = var.redis_num_cache_nodes > 1 ? true : false
   transit_encryption_enabled = true
   at_rest_encryption_enabled = true
-  
+
   tags = var.tags
 }

@@ -22,12 +22,12 @@ resource "aws_dynamodb_table" "this" {
   }
 
   global_secondary_index {
-    name               = "timestamp-index"
-    hash_key           = "session_id"
-    range_key          = "timestamp"
-    projection_type    = "ALL"
-    read_capacity      = var.dynamodb_billing_mode == "PROVISIONED" ? var.dynamodb_read_capacity : null
-    write_capacity     = var.dynamodb_billing_mode == "PROVISIONED" ? var.dynamodb_write_capacity : null
+    name            = "timestamp-index"
+    hash_key        = "session_id"
+    range_key       = "timestamp"
+    projection_type = "ALL"
+    read_capacity   = var.dynamodb_billing_mode == "PROVISIONED" ? var.dynamodb_read_capacity : null
+    write_capacity  = var.dynamodb_billing_mode == "PROVISIONED" ? var.dynamodb_write_capacity : null
   }
 
   ttl {

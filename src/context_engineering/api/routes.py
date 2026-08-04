@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import time
 from typing import Any, cast
 
@@ -35,7 +33,7 @@ class BudgetEstimateRequest(BaseModel):
     user_input: str
 
 
-@router.get("/health")
+@router.get("/health", response_model=None)
 def health_check() -> dict[str, Any]:
     return {
         "service": "enterprise-context-engineering",
@@ -57,20 +55,20 @@ def compress_context(request: CompressRequest, req: Request) -> CompressionResul
     return cast(CompressionResult, compressor.compress(request.text, request.target_tokens))
 
 
-@router.get("/api/v1/memory/{session_id}")
+@router.get("/api/v1/memory/{session_id}", response_model=None)
 def get_memory(session_id: str, req: Request, max_tokens: int = 1000) -> list[dict[str, Any]]:
     memory = req.app.state.memory_manager
     return cast(list[dict[str, Any]], memory.retrieve_memory(session_id, max_tokens))
 
 
-@router.post("/api/v1/memory/{session_id}")
+@router.post("/api/v1/memory/{session_id}", response_model=None)
 def store_memory(session_id: str, request: MemoryTurnRequest, req: Request) -> dict[str, str]:
     memory = req.app.state.memory_manager
     memory.store_turn(session_id, request.role, request.content)
     return {"status": "success"}
 
 
-@router.delete("/api/v1/memory/{session_id}")
+@router.delete("/api/v1/memory/{session_id}", response_model=None)
 def clear_memory(session_id: str, req: Request) -> dict[str, str]:
     memory = req.app.state.memory_manager
     memory.clear_session(session_id)
@@ -86,7 +84,7 @@ def render_template(request: TemplateRenderRequest, req: Request) -> RenderedTem
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@router.get("/api/v1/templates")
+@router.get("/api/v1/templates", response_model=None)
 def list_templates(req: Request) -> dict[str, str]:
     engine = req.app.state.template_engine
     return cast(dict[str, str], engine.list_templates())
@@ -100,7 +98,7 @@ def estimate_budget(request: BudgetEstimateRequest, req: Request) -> TokenBudget
     return cast(TokenBudgetAllocation, opt.allocate_budget(request.max_tokens, sys_tokens, user_tokens))
 
 
-@router.get("/api/v1/audit/events")
+@router.get("/api/v1/audit/events", response_model=None)
 def get_audit_events(req: Request, limit: int = 100) -> list[dict[str, Any]]:
     logger = req.app.state.audit_logger
     return cast(list[dict[str, Any]], logger.get_recent_events(limit))
